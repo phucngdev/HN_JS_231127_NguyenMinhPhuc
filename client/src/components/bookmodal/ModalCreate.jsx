@@ -20,6 +20,7 @@ const ModalCreate = ({ openModalCreateBook, setOpenModalCreateBook }) => {
     }))
   );
 
+  // set lai author
   useEffect(() => {
     if (authors) {
       setAuthor(
@@ -31,6 +32,7 @@ const ModalCreate = ({ openModalCreateBook, setOpenModalCreateBook }) => {
     }
   }, [authors]);
 
+  // call api author để select
   const fetchDataAuthor = async () => {
     await dispatch(findAllAuthor());
   };
@@ -39,10 +41,12 @@ const ModalCreate = ({ openModalCreateBook, setOpenModalCreateBook }) => {
     fetchDataAuthor();
   }, []);
 
+  // select author
   const handleChangeAuthor = (value) => {
     setAuthorId(value);
   };
 
+  // đogs modal create
   const handleCancel = () => {
     setOpenModalCreateBook(false);
   };
@@ -88,6 +92,7 @@ const ModalCreate = ({ openModalCreateBook, setOpenModalCreateBook }) => {
       }
     },
   });
+
   return (
     <>
       {isLoading && (

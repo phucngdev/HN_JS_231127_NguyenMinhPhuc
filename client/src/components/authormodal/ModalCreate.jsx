@@ -8,6 +8,7 @@ import { createAuthor, findAllAuthor } from "../../services/author.service";
 const ModalCreate = ({ openModalCreateAuthor, setOpenModalCreateAuthor }) => {
   const dispatch = useDispatch();
 
+  // đóng modal
   const handleCancel = () => {
     setOpenModalCreateAuthor(false);
   };
@@ -42,6 +43,7 @@ const ModalCreate = ({ openModalCreateAuthor, setOpenModalCreateAuthor }) => {
       }
     },
   });
+
   return (
     <>
       <Modal

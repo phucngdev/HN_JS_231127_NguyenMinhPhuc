@@ -10,6 +10,7 @@ const AuthorDetail = () => {
   const { id } = useParams();
   const authors = useSelector((state) => state.authors.data);
 
+  // cal api author theo id
   const fetchDataAuthor = async () => {
     await dispatch(findAllBookAnAuthor(id));
   };
@@ -33,7 +34,7 @@ const AuthorDetail = () => {
     },
   ];
   const data = authors?.result || [];
-  console.log(data);
+
   return (
     <>
       <div className="mt-4 lg:mt-0 text-white mb-5">

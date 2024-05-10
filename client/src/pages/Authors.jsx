@@ -11,6 +11,7 @@ const Authors = () => {
   const authors = useSelector((state) => state.authors.data);
   const [openModalCreateAuthor, setOpenModalCreateAuthor] = useState(false);
 
+  // call api author
   const fetchDataAuthor = async () => {
     await dispatch(findAllAuthor());
   };

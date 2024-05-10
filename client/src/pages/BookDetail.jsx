@@ -15,7 +15,6 @@ const BookDetail = () => {
   const book = useSelector((state) => state.books.dataEdit);
   const [bookDetail, setBookDetail] = useState(book?.result);
   const [authorId, setAuthorId] = useState(bookDetail?.author_id);
-  console.log(book);
   const [author, setAuthor] = useState(
     authors?.result?.map((item) => ({
       value: item.id,
@@ -23,12 +22,7 @@ const BookDetail = () => {
     }))
   );
 
-  useEffect(() => {
-    if (book) {
-      setBookDetail(book?.result);
-    }
-  }, [book, id]);
-
+  // call api book theo id
   const fetchDataBook = async () => {
     await dispatch(findOneBook(id));
   };
@@ -37,6 +31,7 @@ const BookDetail = () => {
     fetchDataBook();
   }, [id]);
 
+  // set lại author
   useEffect(() => {
     if (authors) {
       setAuthor(
@@ -48,6 +43,7 @@ const BookDetail = () => {
     }
   }, [authors]);
 
+  // call api author
   const fetchDataAuthor = async () => {
     await dispatch(findAllAuthor());
   };
@@ -56,10 +52,24 @@ const BookDetail = () => {
     fetchDataAuthor();
   }, []);
 
+  // thay đổi author
   const handleChangeAuthor = (value) => {
     setAuthorId(value);
   };
 
+  // set lại bookdetail và initialValues formik
+  useEffect(() => {
+    if (book) {
+      setBookDetail(book.result);
+      formik.setValues({
+        name: book.result.book_name,
+        description: book.result.book_description,
+        price: book.result.book_price,
+      });
+    }
+  }, [book]);
+
+  //
   const formik = useFormik({
     initialValues: {
       name: bookDetail?.book_name,
@@ -96,6 +106,7 @@ const BookDetail = () => {
     },
   });
 
+  // xác nhận xoá
   const confirm = async (e) => {
     await dispatch(deleteBook(id));
     navigate("/");

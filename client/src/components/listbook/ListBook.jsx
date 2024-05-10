@@ -13,6 +13,7 @@ const ListBook = ({ query }) => {
   const dispatch = useDispatch();
   const books = useSelector((state) => state.books.data?.result);
 
+  // call api book
   const fetchBooks = async () => {
     await dispatch(findAllBook());
   };
@@ -21,6 +22,7 @@ const ListBook = ({ query }) => {
     fetchBooks();
   }, []);
 
+  // call api có sx giá tăng giảm
   const fetchDataAsc = async () => {
     await dispatch(ascPrice());
   };
@@ -29,6 +31,7 @@ const ListBook = ({ query }) => {
     await dispatch(descPrice());
   };
 
+  // search
   // const fetchDataSearch = async () => {
   //   await dispatch(searchBook(query));
   // };
