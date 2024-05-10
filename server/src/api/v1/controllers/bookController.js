@@ -2,7 +2,7 @@ const bookService = require("../services/book.service");
 
 module.exports.createBook = async (req, res) => {
   try {
-    const result = await bookService.createBookService(req.body, req.params.id);
+    const result = await bookService.createBookService(req.body);
     return res.status(result.status).json(result);
   } catch (error) {
     return res.status(500).json("Lỗi server");
@@ -39,6 +39,15 @@ module.exports.updateBook = async (req, res) => {
 module.exports.deleteBook = async (req, res) => {
   try {
     const result = await bookService.deleteBookService(req.params.id);
+    return res.status(result.status).json(result);
+  } catch (error) {
+    return res.status(500).json("Lỗi server");
+  }
+};
+
+module.exports.searchBook = async (req, res) => {
+  try {
+    const result = await bookService.searchBookService(req.query.q);
     return res.status(result.status).json(result);
   } catch (error) {
     return res.status(500).json("Lỗi server");

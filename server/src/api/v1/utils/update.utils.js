@@ -29,8 +29,8 @@ module.exports.findByIdAndUpdate = async (table, id, body) => {
       })
       .join(", "); // nối query = ", "
     return await pool.execute(
-      `UPDATE ${table} SET ${queryString} WHERE id = ?`,
-      [...values, id]
+      `UPDATE ${table} SET ${queryString}, updated_at = ? WHERE id = ?`,
+      [...values, new Date(), id]
     );
   } catch (error) {
     return {

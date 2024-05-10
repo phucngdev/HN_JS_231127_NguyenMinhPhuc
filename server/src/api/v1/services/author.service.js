@@ -7,7 +7,7 @@ module.exports.createAuthorService = async (data) => {
     const result = await utilsInsert.InsertInto("authors", data);
     if (result) {
       return {
-        status: 200,
+        status: 201,
         message: "Thêm mới thành công",
       };
     }
@@ -38,11 +38,13 @@ module.exports.getAllAuthorService = async () => {
 
 module.exports.getAllBookAnAuthorService = async (id) => {
   try {
-    const [result] = await pool.execute(`
-    SELECT books.*, authors.name AS author
-    FROM books
-    JOIN authors ON books.author = authors.id
-  `);
+    const [result] = await pool.execute(
+      ` SELECT books.* 
+            FROM books
+            JOIN book_author ON books.id = book_author.book_id
+            WHERE book_author.author_id = ?;`,
+      [id]
+    );
     if (result) {
       return {
         status: 200,

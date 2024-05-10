@@ -1,21 +1,46 @@
 import { Button, Input, Modal, Select, Spin, message } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { findAllBook, createBook } from "../../services/book.service";
+import { findAllAuthor } from "../../services/author.service";
 
 const { TextArea } = Input;
 const ModalCreate = ({ openModalCreateBook, setOpenModalCreateBook }) => {
   const dispatch = useDispatch();
   const authors = useSelector((state) => state.authors.data);
-  console.log(authors);
+
   const [isLoading, setIsLoading] = useState(false);
-  const [author, setAuthor] = useState();
-  const options = [];
+  const [authorId, setAuthorId] = useState(1);
+  const [author, setAuthor] = useState(
+    authors?.result?.map((item) => ({
+      value: item.id,
+      label: item.name,
+    }))
+  );
+
+  useEffect(() => {
+    if (authors) {
+      setAuthor(
+        authors?.result?.map((item) => ({
+          value: item.id,
+          label: item.name,
+        }))
+      );
+    }
+  }, [authors]);
+
+  const fetchDataAuthor = async () => {
+    await dispatch(findAllAuthor());
+  };
+
+  useEffect(() => {
+    fetchDataAuthor();
+  }, []);
 
   const handleChangeAuthor = (value) => {
-    setAuthor(value);
+    setAuthorId(value);
   };
 
   const handleCancel = () => {
@@ -44,18 +69,17 @@ const ModalCreate = ({ openModalCreateBook, setOpenModalCreateBook }) => {
           name: values.name,
           description: values.description,
           price: values.price,
-          author: author,
-          created_at: new Date(),
-          updated_at: new Date(),
+          authorId: authorId,
         };
         const response = await dispatch(createBook(newBook));
-        // setIsLoading(false);
-        // if (response?.payload?.status === 201) {
-        //   await dispatch(findAllBook());
-        //   resetForm();
-        //   setIsLoading(false);
-        //   setOpenModalCreateBook(false);
-        // }
+        setIsLoading(false);
+        if (response?.payload?.status === 201) {
+          await dispatch(findAllBook());
+          resetForm();
+          setIsLoading(false);
+          setOpenModalCreateBook(false);
+          message.success("Thêm mới thành công");
+        }
       } catch (error) {
         message.error("Tạo mới thất bại, kiểm tra lại thông tin");
         resetForm();
@@ -85,7 +109,7 @@ const ModalCreate = ({ openModalCreateBook, setOpenModalCreateBook }) => {
               type="text"
               name="name"
               value={formik.values.name}
-              onChange={formik.handleChangeAuthor}
+              onChange={formik.handleChange}
               className="text-[13px] mt-6 border border-gray-200 w-full h-[38px] px-2"
               placeholder="Tên sách"
             />
@@ -102,9 +126,9 @@ const ModalCreate = ({ openModalCreateBook, setOpenModalCreateBook }) => {
               className="text-[13px] mt-2 border border-gray-200 w-full h-[38px] px-2"
               placeholder="Mô tả"
             />
-            {formik.toucheddescription && formik.errorsdescription ? (
+            {formik.touched.description && formik.errors.description ? (
               <div className="text-red-500 text-sm">
-                {formik.errorsdescription}
+                {formik.errors.description}
               </div>
             ) : null}
           </div>
@@ -117,19 +141,17 @@ const ModalCreate = ({ openModalCreateBook, setOpenModalCreateBook }) => {
               className="text-[13px] border mt-2 border-gray-200 w-full h-[38px] px-2"
               placeholder="Giá tièn"
             />
-            {formik.touchedprice && formik.errorsprice ? (
-              <div className="text-red-500 text-sm">{formik.errorsprice}</div>
+            {formik.touched.price && formik.errors.price ? (
+              <div className="text-red-500 text-sm">{formik.errors.price}</div>
             ) : null}
           </div>
           <Select
-            defaultValue="lucy"
-            style={{
-              width: 120,
-            }}
+            defaultValue={1}
+            className="w-full mt-2"
             onChange={handleChangeAuthor}
-            options={options}
+            options={author}
           />
-          <div className="flex justify-end">
+          <div className="flex justify-end mt-4">
             <Button type="primary" htmlType="submit">
               Submit
             </Button>

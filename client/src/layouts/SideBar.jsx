@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 const Sidebar = () => {
   return (
     <>
-      <div className="hidden bg-[#e2e2e2] lg:block lg:w-[220px] xl:w-[320px] h-[100vh] fixed top-0 left-0">
+      <div className="hidden bg-[#40393e] text-white lg:block lg:w-[220px] xl:w-[320px] h-[100vh] fixed top-0 left-0">
         <div className="flex justify-center mt-[17px]">
           <h1 className="text-2xl font-bold">Books Store</h1>
         </div>

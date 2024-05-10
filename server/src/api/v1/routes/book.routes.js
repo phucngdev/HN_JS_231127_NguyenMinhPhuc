@@ -3,7 +3,7 @@ const bookController = require("../controllers/bookController");
 const bookValidate = require("../validations/book.validation");
 
 routerBooks.post(
-  "/:id",
+  "/",
   bookValidate.createBookValidate,
   bookController.createBook
 );
@@ -19,5 +19,7 @@ routerBooks.put(
 );
 
 routerBooks.delete("/:id", bookController.deleteBook);
+
+routerBooks.get("/search/search", bookController.searchBook);
 
 module.exports = routerBooks;

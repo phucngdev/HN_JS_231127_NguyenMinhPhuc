@@ -2,7 +2,11 @@ const pool = require("../../../config/connect");
 
 module.exports.findByIdAndDelete = async (table, id) => {
   try {
-    return await pool.execute(`DELETE FROM ${table} WHERE id = ?`, [id]);
+    const result = await pool.execute(`DELETE FROM ${table} WHERE id = ?`, [
+      id,
+    ]);
+
+    return result;
   } catch (error) {
     return {
       message: "Lỗi server",

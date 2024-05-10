@@ -2,10 +2,16 @@ const utilsInsert = require("../utils/insert.utils");
 const utilsFind = require("../utils/find.utils");
 const utilsUpdate = require("../utils/update.utils");
 const utilsDelete = require("../utils/delete.utils");
+const pool = require("../../../config/connect");
 
-module.exports.createBookService = async (data, authorId) => {
+module.exports.createBookService = async (data) => {
   try {
-    const bookInsertResult = await utilsInsert.InsertInto("books", data);
+    const { authorId } = data;
+    const bookInsertResult = await utilsInsert.InsertInto("books", {
+      name: data.name,
+      description: data.description,
+      price: data.price,
+    });
     if (bookInsertResult && bookInsertResult.insertId) {
       await utilsInsert.InsertInto("book_author", {
         book_id: bookInsertResult.insertId,
@@ -13,7 +19,7 @@ module.exports.createBookService = async (data, authorId) => {
       });
     }
     return {
-      status: 200,
+      status: 201,
       message: "Thêm thành công",
     };
   } catch (error) {
@@ -41,7 +47,22 @@ module.exports.getAllBookService = async () => {
 
 module.exports.getOneBookService = async (id) => {
   try {
-    const result = await utilsFind.findById("books", id);
+    const [result] = await pool.execute(
+      `SELECT books.id AS book_id,
+           books.name AS book_name,
+           books.description AS book_description,
+           books.price AS book_price,
+           books.created_at AS book_created_at,
+           books.updated_at AS book_updated_at,
+           authors.name AS author_name,
+           authors.id AS author_id,
+           authors.biography AS author_biography
+      FROM books
+      JOIN book_author ON books.id = book_author.book_id
+      JOIN authors ON book_author.author_id = authors.id
+      WHERE books.id = ?`,
+      [id]
+    );
     return {
       status: 200,
       result: result,
@@ -56,7 +77,11 @@ module.exports.getOneBookService = async (id) => {
 
 module.exports.updateBookService = async (id, data) => {
   try {
-    const result = await utilsUpdate.findByIdAndUpdate("books", id, data);
+    const result = await utilsUpdate.findByIdAndUpdate("books", id, {
+      name: data.name,
+      description: data.description,
+      price: data.price,
+    });
     if (result) {
       return {
         status: 200,
@@ -73,13 +98,30 @@ module.exports.updateBookService = async (id, data) => {
 
 module.exports.deleteBookService = async (id) => {
   try {
-    const result = await utilsDelete.findByIdAndDelete("books", id);
-    if (result) {
-      return {
-        status: 200,
-        message: "Xoá thành công",
-      };
-    }
+    await pool.execute("DELETE FROM book_author WHERE book_id = ?", [id]);
+    await pool.execute("DELETE FROM books WHERE id = ?", [id]);
+    return {
+      status: 200,
+      message: "Xoá thành công",
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message: "Lỗi server",
+    };
+  }
+};
+
+module.exports.searchBookService = async (q) => {
+  try {
+    const [result] = await pool.execute(
+      `SELECT * FROM books WHERE name LIKE ?`,
+      [`%${q}%`]
+    );
+    return {
+      status: 200,
+      result: result,
+    };
   } catch (error) {
     return {
       status: 500,
