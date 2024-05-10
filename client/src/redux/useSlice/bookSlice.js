@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
+  ascPrice,
   createBook,
   deleteBook,
+  descPrice,
   findAllBook,
   findOneBook,
   searchBook,
@@ -81,6 +83,28 @@ const bookSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(searchBook.rejected, (state, action) => {
+        state.status = "Failed!";
+        state.error = action.error.message;
+      })
+      .addCase(descPrice.pending, (state) => {
+        state.status = "Pending!";
+      })
+      .addCase(descPrice.fulfilled, (state, action) => {
+        state.status = "Successfully!";
+        state.data = action.payload;
+      })
+      .addCase(descPrice.rejected, (state, action) => {
+        state.status = "Failed!";
+        state.error = action.error.message;
+      })
+      .addCase(ascPrice.pending, (state) => {
+        state.status = "Pending!";
+      })
+      .addCase(ascPrice.fulfilled, (state, action) => {
+        state.status = "Successfully!";
+        state.data = action.payload;
+      })
+      .addCase(ascPrice.rejected, (state, action) => {
         state.status = "Failed!";
         state.error = action.error.message;
       });

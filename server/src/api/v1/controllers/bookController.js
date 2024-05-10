@@ -53,3 +53,21 @@ module.exports.searchBook = async (req, res) => {
     return res.status(500).json("Lỗi server");
   }
 };
+
+module.exports.ascPriceBook = async (req, res) => {
+  try {
+    const result = await bookService.ascBookService();
+    return res.status(result.status).json(result);
+  } catch (error) {
+    return res.status(500).json("Lỗi server");
+  }
+};
+
+module.exports.descPriceBook = async (req, res) => {
+  try {
+    const result = await bookService.descBookService();
+    return res.status(result.status).json(result);
+  } catch (error) {
+    return res.status(500).json("Lỗi server");
+  }
+};

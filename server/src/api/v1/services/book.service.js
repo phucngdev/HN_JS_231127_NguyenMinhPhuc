@@ -47,7 +47,7 @@ module.exports.getAllBookService = async () => {
 
 module.exports.getOneBookService = async (id) => {
   try {
-    const [result] = await pool.execute(
+    const [[result]] = await pool.execute(
       `SELECT books.id AS book_id,
            books.name AS book_name,
            books.description AS book_description,
@@ -103,6 +103,59 @@ module.exports.deleteBookService = async (id) => {
     return {
       status: 200,
       message: "Xoá thành công",
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message: "Lỗi server",
+    };
+  }
+};
+
+module.exports.searchBookService = async (q) => {
+  try {
+    const [result] = await pool.execute(
+      `SELECT * FROM books WHERE name LIKE ?`,
+      [`%${q}%`]
+    );
+    return {
+      status: 200,
+      result: result,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message: "Lỗi server",
+    };
+  }
+};
+
+module.exports.ascBookService = async () => {
+  try {
+    const [result] = await pool.execute(
+      "SELECT * FROM books ORDER BY price ASC"
+    );
+    console.log(result);
+    return {
+      status: 200,
+      result: result,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message: "Lỗi server",
+    };
+  }
+};
+
+module.exports.descBookService = async () => {
+  try {
+    const [result] = await pool.execute(
+      "SELECT * FROM books ORDER BY price DESC"
+    );
+    return {
+      status: 200,
+      result: result,
     };
   } catch (error) {
     return {

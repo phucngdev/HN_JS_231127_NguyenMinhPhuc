@@ -22,4 +22,8 @@ routerBooks.delete("/:id", bookController.deleteBook);
 
 routerBooks.get("/search/search", bookController.searchBook);
 
+routerBooks.get("/price/asc", bookController.ascPriceBook);
+
+routerBooks.get("/price/desc", bookController.descPriceBook);
+
 module.exports = routerBooks;

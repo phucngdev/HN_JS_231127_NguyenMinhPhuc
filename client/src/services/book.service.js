@@ -58,3 +58,21 @@ export const searchBook = createAsyncThunk("search/book", async (q) => {
     return null;
   }
 });
+
+export const ascPrice = createAsyncThunk("asc/book", async (q) => {
+  try {
+    const response = await BaseUrl.get(`book/price/asc`);
+    return response.data;
+  } catch (error) {
+    return null;
+  }
+});
+
+export const descPrice = createAsyncThunk("desc/book", async (q) => {
+  try {
+    const response = await BaseUrl.get(`book/price/desc`);
+    return response.data;
+  } catch (error) {
+    return null;
+  }
+});

@@ -37,7 +37,7 @@ const AuthorDetail = () => {
   return (
     <>
       <div className="mt-4 lg:mt-0 text-white mb-5">
-        <h3 className="text-xl font-bold ">Chi tiết</h3>
+        <h3 className="text-xl font-bold ">Danh sách các sách của tác giả</h3>
       </div>
       <Table columns={columns} dataSource={data} size="middle" />
     </>
